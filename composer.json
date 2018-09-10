@@ -1,16 +1,21 @@
 {
-    "name": "thedmsgroup/mautic-dashboard-warm-bundle",
-    "description": "Improves the performance of the dashboard by sharing/extending/warming caches.",
-    "keywords": ["mautic","marketing","marketing automation","plugin"],
-    "type": "mautic-plugin",
-    "require": {
-        "mautic/composer-plugin": "^1.0"
-    },
-    "license": "GPL-3.0-only",
-    "authors": [
-        {
-            "name": "Heath Dutton",
-            "email": "heathdutton@gmail.com"
-        }
-    ]
+  "name": "thedmsgroup/mautic-dashboard-warm-bundle",
+  "description": "Improves the performance of the dashboard by sharing/extending/warming caches.",
+  "keywords": [
+    "mautic",
+    "marketing",
+    "marketing automation",
+    "plugin"
+  ],
+  "type": "mautic-plugin",
+  "require": {
+    "mautic/composer-plugin": "^1.0"
+  },
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "Heath Dutton",
+      "email": "heathdutton@gmail.com"
+    }
+  ]
 }

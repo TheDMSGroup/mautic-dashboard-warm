@@ -19,7 +19,7 @@ use Mautic\PluginBundle\Integration\AbstractIntegration;
 class DashboardWarmIntegration extends AbstractIntegration
 {
     /** @var int */
-    const CACHE_TTL = 30;
+    const CACHE_TTL = 60;
 
     /** @var int */
     const SHARE_CACHES = 1;

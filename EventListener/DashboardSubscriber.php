@@ -57,7 +57,7 @@ class DashboardSubscriber extends CommonSubscriber
     public static function getSubscribedEvents()
     {
         return [
-            DashboardEvents::DASHBOARD_ON_MODULE_DETAIL_GENERATE => ['onWidgetDetailGenerate', 0],
+            DashboardEvents::DASHBOARD_ON_MODULE_DETAIL_GENERATE => ['onWidgetDetailGenerate', 10],
         ];
     }
 
