@@ -15,6 +15,7 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\CoreBundle\Helper\PathsHelper;
 use Mautic\DashboardBundle\DashboardEvents;
+use Mautic\DashboardBundle\Entity\Widget;
 use Mautic\DashboardBundle\Event\WidgetDetailEvent;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticDashboardWarmBundle\Integration\DashboardWarmIntegration;
@@ -67,25 +68,39 @@ class DashboardSubscriber extends CommonSubscriber
      */
     public function onWidgetDetailGenerate(WidgetDetailEvent $event)
     {
-        $cache_ttl = DashboardWarmIntegration::CACHE_TTL;
-        $share_caches = DashboardWarmIntegration::SHARE_CACHES;
+        $cacheTTL    = DashboardWarmIntegration::CACHE_TTL;
+        $shareCaches = DashboardWarmIntegration::SHARE_CACHES;
         /** @var \Mautic\PluginBundle\Integration\AbstractIntegration $integration */
         $integration = $this->integrationHelper->getIntegrationObject('DashboardWarm');
         if ($integration) {
-            $this->integration = $integration;
-            $this->settings    = $integration->getIntegrationSettings()->getFeatureSettings();
-            if (isset($this->settings['share_caches'])) {
-                $share_caches = $this->settings['share_caches'];
+            $settings = $integration->getIntegrationSettings()->getFeatureSettings();
+            if (isset($settings['share_caches'])) {
+                $shareCaches = $settings['share_caches'];
             }
-            if (isset($this->settings['cache_ttl'])) {
-                $cache_ttl = $this->settings['cache_ttl'];
+            if (isset($settings['cache_ttl'])) {
+                $cacheTTL = $settings['cache_ttl'];
             }
         }
 
-        $cacheDir = $this->coreParametersHelper->getParameter(
-            'cached_data_dir',
-            $this->pathsHelper->getSystemPath('cache', true)
-        );
-        $event->setCacheDir($cacheDir, null);
+        // Share cache directories between users if appropriate.
+        if ($shareCaches) {
+            $cacheDir = $this->coreParametersHelper->getParameter(
+                'cached_data_dir',
+                $this->pathsHelper->getSystemPath('cache', true)
+            );
+            $event->setCacheDir($cacheDir, 'shared_dashboard');
+        }
+
+        // Override the default cache timeout for the widget if appropriate.
+        if ($cacheTTL) {
+            /** @var Widget $widget */
+            $widget = $event->getWidget();
+            if ($widget) {
+                $defaultCacheTTL = $widget->getCacheTimeout();
+                if ($defaultCacheTTL < $cacheTTL) {
+                    $event->setCacheTimeout($cacheTTL);
+                }
+            }
+        }
     }
 }

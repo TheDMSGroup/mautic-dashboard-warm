@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
- * Class WarmModel
+ * Class WarmModel.
  */
 class WarmModel
 {

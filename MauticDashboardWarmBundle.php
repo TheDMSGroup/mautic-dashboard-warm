@@ -14,7 +14,7 @@ namespace MauticPlugin\MauticDashboardWarmBundle;
 use Mautic\PluginBundle\Bundle\PluginBundleBase;
 
 /**
- * Class MauticDashboardWarmBundle
+ * Class MauticDashboardWarmBundle.
  */
 class MauticDashboardWarmBundle extends PluginBundleBase
 {
