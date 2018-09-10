@@ -13,10 +13,9 @@ namespace MauticPlugin\MauticDashboardWarmBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\MauticHealthBundle\Integration\HealthIntegration;
 
 /**
- * Class HealthModel.
+ * Class WarmModel
  */
 class WarmModel
 {
@@ -28,9 +27,6 @@ class WarmModel
 
     /** @var array */
     protected $settings;
-
-    /** @var HealthIntegration */
-    protected $integration;
 
     /**
      * HealthModel constructor.
@@ -44,13 +40,6 @@ class WarmModel
     ) {
         $this->em                = $em;
         $this->integrationHelper = $integrationHelper;
-
-        /** @var \Mautic\PluginBundle\Integration\AbstractIntegration $integration */
-        $integration = $this->integrationHelper->getIntegrationObject('Health');
-        if ($integration) {
-            $this->integration = $integration;
-            $this->settings    = $integration->getIntegrationSettings()->getFeatureSettings();
-        }
     }
 
     /**

@@ -16,11 +16,21 @@ return [
     'author'      => 'Mautic',
 
     'services' => [
-        'models'       => [
-            'mautic.dashboard.model.warm' => [
+        'models' => [
+            'mautic.dashboardwarm.model.warm' => [
                 'class'     => 'MauticPlugin\MauticDashboardWarmBundle\Model\WarmModel',
                 'arguments' => [
                     'doctrine.orm.entity_manager',
+                    'mautic.helper.integration',
+                ],
+            ],
+        ],
+        'events' => [
+            'mautic.dashboardwarm.subscriber' => [
+                'class'     => 'MauticPlugin\MauticDashboardWarmBundle\EventListener\DashboardSubscriber',
+                'arguments' => [
+                    'mautic.helper.core_parameters',
+                    'mautic.helper.paths',
                     'mautic.helper.integration',
                 ],
             ],

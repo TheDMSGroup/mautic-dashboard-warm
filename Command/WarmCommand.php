@@ -47,7 +47,7 @@ class WarmCommand extends ModeratedCommand
         }
 
         /** @var HealthModel $healthModel */
-        $model = $container->get('mautic.dashboard.model.warm');
+        $model = $container->get('mautic.dashboardwarm.model.warm');
 
         $model->warm();
 
