@@ -16,21 +16,39 @@ return [
     'author'      => 'Mautic',
 
     'services' => [
-        'models' => [
+        'models'  => [
             'mautic.dashboardwarm.model.warm' => [
-                'class'     => 'MauticPlugin\MauticDashboardWarmBundle\Model\WarmModel',
+                'class'     => 'MauticPlugin\MauticDashboardWarmBundle\Model\DashboardWarmModel',
                 'arguments' => [
                     'doctrine.orm.entity_manager',
                     'mautic.helper.integration',
+                    'mautic.dashboard.model.dashboard',
+                    'mautic.user.model.user',
+                    'monolog.logger.mautic',
+                    'mautic.dashboardwarm.helper.user',
                 ],
             ],
         ],
-        'events' => [
+        'events'  => [
             'mautic.dashboardwarm.subscriber' => [
                 'class'     => 'MauticPlugin\MauticDashboardWarmBundle\EventListener\DashboardSubscriber',
                 'arguments' => [
                     'mautic.helper.core_parameters',
                     'mautic.helper.paths',
+                    'mautic.dashboardwarm.helper.settings',
+                ],
+            ],
+        ],
+        'helpers' => [
+            'mautic.dashboardwarm.helper.user'     => [
+                'class'     => 'MauticPlugin\MauticDashboardWarmBundle\Helper\UserHelper',
+                'arguments' => [
+                    'security.token_storage',
+                ],
+            ],
+            'mautic.dashboardwarm.helper.settings' => [
+                'class'     => 'MauticPlugin\MauticDashboardWarmBundle\Helper\SettingsHelper',
+                'arguments' => [
                     'mautic.helper.integration',
                 ],
             ],

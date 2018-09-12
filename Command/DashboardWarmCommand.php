@@ -12,8 +12,10 @@
 namespace MauticPlugin\MauticDashboardWarmBundle\Command;
 
 use Mautic\CoreBundle\Command\ModeratedCommand;
-use MauticPlugin\MauticHealthBundle\Model\HealthModel;
+use MauticPlugin\MauticDashboardWarmBundle\Helper\SettingsHelper;
+use MauticPlugin\MauticDashboardWarmBundle\Model\DashboardWarmModel;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -21,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * php app/console mautic:dashboard:boost
  */
-class WarmCommand extends ModeratedCommand
+class DashboardWarmCommand extends ModeratedCommand
 {
     /**
      * Maintenance command line task.
@@ -29,7 +31,14 @@ class WarmCommand extends ModeratedCommand
     protected function configure()
     {
         $this->setName('mautic:dashboard:warm')
-            ->setDescription('Warm the dashboard widget caches.');
+            ->setDescription('Warm the dashboard widget caches.')
+            ->addOption(
+                '--limit',
+                '-l',
+                InputOption::VALUE_OPTIONAL,
+                'Maximum number of widgets to warm up for this script execution.',
+                50
+            );
         parent::configure();
     }
 
@@ -45,11 +54,15 @@ class WarmCommand extends ModeratedCommand
         if (!$this->checkRunStatus($input, $output)) {
             return 0;
         }
+        $limit = $input->getOption('limit');
 
-        /** @var HealthModel $healthModel */
+        /** @var SettingsHelper $settingsHelper */
+        $settingsHelper = $container->get('mautic.dashboardwarm.helper.settings');
+        $sharedCache    = (bool) $settingsHelper->getShareCaches();
+
+        /** @var DashboardWarmModel $model */
         $model = $container->get('mautic.dashboardwarm.model.warm');
-
-        $model->warm();
+        $model->warm($limit, $sharedCache);
 
         $this->completeRun();
 

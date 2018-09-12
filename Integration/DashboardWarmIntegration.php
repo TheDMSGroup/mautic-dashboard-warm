@@ -12,18 +12,13 @@
 namespace MauticPlugin\MauticDashboardWarmBundle\Integration;
 
 use Mautic\PluginBundle\Integration\AbstractIntegration;
+use MauticPlugin\MauticDashboardWarmBundle\Helper\SettingsHelper;
 
 /**
  * Class HealthIntegration.
  */
 class DashboardWarmIntegration extends AbstractIntegration
 {
-    /** @var int */
-    const CACHE_TTL = 60;
-
-    /** @var int */
-    const SHARE_CACHES = 1;
-
     /**
      * @return string
      */
@@ -61,7 +56,7 @@ class DashboardWarmIntegration extends AbstractIntegration
                 'number',
                 [
                     'label' => $this->translator->trans('mautic.dashboard.warm.cache_ttl'),
-                    'data'  => !isset($data['cache_ttl']) ? self::CACHE_TTL : (int) $data['cache_ttl'],
+                    'data'  => !isset($data['cache_ttl']) ? SettingsHelper::CACHE_TTL : (int) $data['cache_ttl'],
                     'attr'  => [
                         'tooltip' => $this->translator->trans('mautic.dashboard.warm.cache_ttl.tooltip'),
                     ],
@@ -72,7 +67,7 @@ class DashboardWarmIntegration extends AbstractIntegration
                 'yesno_button_group',
                 [
                     'label' => $this->translator->trans('mautic.dashboard.warm.share_caches'),
-                    'data'  => !isset($data['share_caches']) ? self::SHARE_CACHES : (bool) $data['share_caches'],
+                    'data'  => !isset($data['share_caches']) ? SettingsHelper::SHARE_CACHES : (bool) $data['share_caches'],
                     'attr'  => [
                         'tooltip' => $this->translator->trans('mautic.dashboard.warm.share_caches.tooltip'),
                     ],
