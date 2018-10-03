@@ -62,7 +62,7 @@ class DashboardWarmCommand extends ModeratedCommand
 
         /** @var DashboardWarmModel $model */
         $model = $container->get('mautic.dashboardwarm.model.warm');
-        $model->warm($limit, $sharedCache);
+        $model->warm($output, $limit, $sharedCache);
 
         $this->completeRun();
 

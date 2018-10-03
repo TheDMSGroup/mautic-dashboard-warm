@@ -17,6 +17,7 @@ use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\UserBundle\Model\UserModel;
 use MauticPlugin\MauticDashboardWarmBundle\Helper\UserHelper;
 use Monolog\Logger;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class WarmModel.
@@ -90,12 +91,11 @@ class DashboardWarmModel
     /**
      * Warm the caches of dashboard widgets.
      *
-     * @param int  $limit
-     * @param bool $sharedCache
-     *
-     * @return null|void
+     * @param OutputInterface $output
+     * @param int             $limit
+     * @param bool            $sharedCache
      */
-    public function warm($limit = 50, $sharedCache = false)
+    public function warm(OutputInterface $output, $limit = 50, $sharedCache = false)
     {
         // Find appropriate users.
         $userRepo   = $this->userModel->getRepository();
@@ -120,6 +120,8 @@ class DashboardWarmModel
             ]
         );
         if (!$users) {
+            $output->write('<error>No users found to warm the dashboard for.</error>');
+
             return;
         }
 
@@ -160,6 +162,11 @@ class DashboardWarmModel
                 ]
             );
             if (!$widgets) {
+                $output->write(
+                    '<warning>'.
+                    'No widgets found for '.$user->getFirstName().' '.$user->getLastName().
+                    '</warning>'
+                );
                 continue;
             }
             // Generate widget content (including cache).
@@ -175,11 +182,18 @@ class DashboardWarmModel
                 $this->widgetsBuilt[$key] = $widget->getType();
             }
             if (!$widgetTypes) {
+                $output->write(
+                    '<warning>'.
+                    'No uncached widgets to warm for '.$user->getFirstName().' '.$user->getLastName().
+                    '</warning>'
+                );
                 continue;
             }
-            $this->logger->info(
+            $output->write(
+                '<info>'.
                 'Warming dashboard widget cache for '.$user->getFirstName().' '.$user->getLastName().
-                ' Including: '.implode(', ', $widgetTypes)
+                ' Including: '.implode(', ', $widgetTypes).
+                '</info>'
             );
             $i += count($widgets);
             try {
@@ -190,6 +204,12 @@ class DashboardWarmModel
                 $this->dashboardModel->setUserHelper($this->userHelper);
                 $this->dashboardModel->populateWidgetsContent($widgets, $widgetFilter);
             } catch (\Exception $e) {
+                $output->write(
+                    '<error>'.
+                    'Unable to warm dashboard widget cache for '.$user->getFirstName().' '.$user->getLastName().
+                    ' Including: '.implode(', ', $widgetTypes).' Error: '.$e->getMessage().
+                    '</error>'
+                );
                 $this->logger->error(
                     'Unable to warm dashboard widget cache for '.$user->getFirstName().' '.$user->getLastName().
                     ' Including: '.implode(', ', $widgetTypes).' Error: '.$e->getMessage()
@@ -198,7 +218,7 @@ class DashboardWarmModel
 
             // Do not process more widgets than the batch limit.
             if ($i >= $limit) {
-                $this->logger->debug('Batch limit hit, stopping dashboard warm run.');
+                $output->write('Batch limit hit, stopping dashboard warm run.');
                 break;
             }
         }
