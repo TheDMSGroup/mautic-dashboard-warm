@@ -85,6 +85,16 @@ class DashboardSubscriber extends CommonSubscriber
                 if ($defaultCacheTTL < $this->settingsHelper->getCacheTTL()) {
                     $event->setCacheTimeout($this->settingsHelper->getCacheTTL());
                 }
+                // add date Params as clone params to keep date as unique key for cache
+                // since Core removes date params before generating keys
+                $params                  = $widget->getParams();
+                $cloneFrom               = isset($params['dateFrom']) ? clone $params['dateFrom'] : new \DateTime('today midnight');
+                $cloneTo                 = isset($params['dateTo']) ? clone $params['dateTo'] : new \DateTime('tomorrow midnight - 1 second');
+                $params['uniqueDateKey'] = [
+                    'fromKey' => $cloneFrom,
+                    'toKey'   => $cloneTo,
+                ];
+                $widget->setParams($params);
             }
         }
     }
