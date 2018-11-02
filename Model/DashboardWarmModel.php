@@ -120,7 +120,7 @@ class DashboardWarmModel
             ]
         );
         if (!$users) {
-            $output->write('<error>No users found to warm the dashboard for.</error>');
+            $output->writeln('<error>No users found to warm the dashboard for.</error>');
 
             return;
         }
@@ -162,10 +162,10 @@ class DashboardWarmModel
                 ]
             );
             if (!$widgets) {
-                $output->write(
-                    '<warning>'.
+                $output->writeln(
+                    '<warm>'.
                     'No widgets found for '.$user->getFirstName().' '.$user->getLastName().
-                    '</warning>'
+                    '</warm>'
                 );
                 continue;
             }
@@ -182,14 +182,14 @@ class DashboardWarmModel
                 $this->widgetsBuilt[$key] = $widget->getType();
             }
             if (!$widgetTypes) {
-                $output->write(
-                    '<warning>'.
+                $output->writeln(
+                    '<warn>'.
                     'No uncached widgets to warm for '.$user->getFirstName().' '.$user->getLastName().
-                    '</warning>'
+                    '</warn>'
                 );
                 continue;
             }
-            $output->write(
+            $output->writeln(
                 '<info>'.
                 'Warming dashboard widget cache for '.$user->getFirstName().' '.$user->getLastName().
                 ' Including: '.implode(', ', $widgetTypes).
@@ -204,7 +204,7 @@ class DashboardWarmModel
                 $this->dashboardModel->setUserHelper($this->userHelper);
                 $this->dashboardModel->populateWidgetsContent($widgets, $widgetFilter);
             } catch (\Exception $e) {
-                $output->write(
+                $output->writeln(
                     '<error>'.
                     'Unable to warm dashboard widget cache for '.$user->getFirstName().' '.$user->getLastName().
                     ' Including: '.implode(', ', $widgetTypes).' Error: '.$e->getMessage().
@@ -218,7 +218,7 @@ class DashboardWarmModel
 
             // Do not process more widgets than the batch limit.
             if ($i >= $limit) {
-                $output->write('Batch limit hit, stopping dashboard warm run.');
+                $output->writeln('Batch limit hit, stopping dashboard warm run.');
                 break;
             }
         }

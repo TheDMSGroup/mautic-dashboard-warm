@@ -37,7 +37,7 @@ class DashboardWarmCommand extends ModeratedCommand
                 '-l',
                 InputOption::VALUE_OPTIONAL,
                 'Maximum number of widgets to warm up for this script execution.',
-                50
+                100
             );
         parent::configure();
     }
@@ -54,7 +54,7 @@ class DashboardWarmCommand extends ModeratedCommand
         if (!$this->checkRunStatus($input, $output)) {
             return 0;
         }
-        $limit = $input->getOption('limit');
+        $limit = (int) $input->getOption('limit');
 
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = $container->get('mautic.dashboardwarm.helper.settings');
