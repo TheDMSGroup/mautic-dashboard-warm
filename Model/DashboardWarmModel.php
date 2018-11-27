@@ -162,11 +162,7 @@ class DashboardWarmModel
                 ]
             );
             if (!$widgets) {
-                $output->writeln(
-                    '<warm>'.
-                    'No widgets found for '.$user->getFirstName().' '.$user->getLastName().
-                    '</warm>'
-                );
+                $output->writeln('No widgets found for '.$user->getFirstName().' '.$user->getLastName());
                 continue;
             }
             // Generate widget content (including cache).
@@ -182,11 +178,7 @@ class DashboardWarmModel
                 $this->widgetsBuilt[$key] = $widget->getType();
             }
             if (!$widgetTypes) {
-                $output->writeln(
-                    '<warn>'.
-                    'No uncached widgets to warm for '.$user->getFirstName().' '.$user->getLastName().
-                    '</warn>'
-                );
+                $output->writeln('No uncached widgets to warm for '.$user->getFirstName().' '.$user->getLastName());
                 continue;
             }
             $output->writeln(
