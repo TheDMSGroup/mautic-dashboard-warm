@@ -1,8 +1,8 @@
 # Standard .travis.yml for a Mautic plugin. Adjust env variables as needed.
 env:
   global:
-  # The exact plugin folder/bundle name.
-  - "MAUTIC_PLUGIN=MauticDashboardWarmBundle"
+    # The exact plugin folder/bundle name.
+    - "MAUTIC_PLUGIN=MauticDashboardWarmBundle"
 
 dist: precise
 
